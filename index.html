@@ -13,6 +13,15 @@
       font-family: monospace;
       font-size: 16px;
     }
+    #mensaje {
+      position: absolute;
+      top: 10px;
+      left: 0;
+      width: 100%;
+      text-align: center;
+      color: #ff69b4;
+      z-index: 10;
+    }
     canvas {
       display: block;
     }
@@ -20,7 +29,9 @@
 </head>
 <body>
 
-<audio autoplay loop>
+<div id="mensaje">Si no escuchas la canción, haz clic en cualquier lugar de la página 🎵</div>
+
+<audio id="audio" autoplay loop>
   <source src="ghost.mp3" type="audio/mpeg">
   Tu navegador no soporta audio HTML5.
 </audio>
@@ -31,12 +42,25 @@
   const canvas = document.getElementById('canvas');
   const ctx = canvas.getContext('2d');
 
-  canvas.height = window.innerHeight;
-  canvas.width = window.innerWidth;
+  function resizeCanvas() {
+    canvas.height = window.innerHeight;
+    canvas.width = window.innerWidth;
+  }
+
+  resizeCanvas();
+
+  window.addEventListener('resize', resizeCanvas);
 
   const fontSize = 18;
-  const columns = canvas.width / fontSize;
-  const drops = new Array(Math.floor(columns)).fill(1);
+  let columns = Math.floor(canvas.width / fontSize);
+  let drops = new Array(columns).fill(1);
+
+  function resetDrops() {
+    columns = Math.floor(canvas.width / fontSize);
+    drops = new Array(columns).fill(1);
+  }
+
+  window.addEventListener('resize', resetDrops);
 
   function draw() {
     ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
@@ -63,6 +87,13 @@
     ctx.fillStyle = "#ff1493";
     ctx.font = "bold 24px sans-serif";
     ctx.fillText("TE AMO", x - 30, y);
+  });
+
+  // Permitir reproducir el audio tras un click si autoplay falla
+  document.body.addEventListener('click', function() {
+    const audio = document.getElementById('audio');
+    audio.play();
+    document.getElementById('mensaje').style.display = 'none';
   });
 </script>
 </body>
