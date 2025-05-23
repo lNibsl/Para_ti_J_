@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -49,7 +48,10 @@
 
   resizeCanvas();
 
-  window.addEventListener('resize', resizeCanvas);
+  window.addEventListener('resize', () => {
+    resizeCanvas();
+    resetDrops();
+  });
 
   const fontSize = 18;
   let columns = Math.floor(canvas.width / fontSize);
@@ -59,8 +61,6 @@
     columns = Math.floor(canvas.width / fontSize);
     drops = new Array(columns).fill(1);
   }
-
-  window.addEventListener('resize', resetDrops);
 
   function draw() {
     ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
